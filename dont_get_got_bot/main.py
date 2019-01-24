@@ -1,4 +1,4 @@
-from dont_get_got_bot import dynamodb_functions as ddb
+import dynamodb_functions as ddb
 
 
 class DontGetGotBot:
@@ -22,4 +22,7 @@ class DontGetGotBot:
 
 
 def lambda_handler(event, context):
-    DontGetGotBot().list_players()
+    return {
+        "body": DontGetGotBot().list_players(),
+        "statusCode": 20
+    }

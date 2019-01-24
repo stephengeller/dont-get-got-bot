@@ -4,6 +4,13 @@ import os
 TABLE_NAME = 'dont_get_got_scores'
 REGION = 'eu-west-2'
 
+if "ENVIRONMENT" in os.environ:
+    env = os.environ["ENVIRONMENT"]
+else:
+    env = "dev"
+
+boto3.setup_default_session(region_name=REGION)
+
 
 def add_player(player):
     table = create_table_session()
@@ -12,18 +19,28 @@ def add_player(player):
 
 
 def create_table_session():
-    dynamodb = boto3.resource('dynamodb', region_name=REGION)
+    session = create_session()
+    dynamodb = session.resource('dynamodb', region_name=REGION)
     table = dynamodb.Table(TABLE_NAME)
     return table
 
 
 def create_client():
-    session = boto3.session.Session(
-        region_name=REGION,
-        aws_access_key_id=os.environ["AWS_ACCESS_KEY"],
-        aws_secret_access_key=os.environ["AWS_SECRET_KEY"],
-    )
-    return session.client('dynamodb')
+    session = create_session()
+    return session.client('dynamodb', region_name=REGION)
+
+
+def create_session():
+    if env == "prod":
+        print(os.environ)
+        session = boto3.session.Session(
+            region_name=REGION,
+            aws_access_key_id=os.environ["ACCESS_KEY_ID"],
+            aws_secret_access_key=os.environ["SECRET_KEY"],
+        )
+    else:
+        session = boto3.session.Session(profile_name="personal")
+    return session
 
 
 def get_score(player):
@@ -36,7 +53,7 @@ def get_score(player):
             }
         }
     )
-    score = response['Item']['points']['N']
+    score = response['Item']['points']['S']
     print("Score for %s is now [%s]" % (player, score))
     return score
 
@@ -53,7 +70,7 @@ def put_item_in_table(player, score, table):
     table.put_item(
         Item={
             "player": player,
-            "points": score
+            "points": str(score)
         }
     )
 
