@@ -1,4 +1,6 @@
 .env
 .idea
 .pytest_cache
-slack_http_request.json
+*.json
+node_modules
+.DS_Store
