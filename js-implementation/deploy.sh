@@ -4,7 +4,7 @@ set -e
 
 SRC=dont_get_got_bot
 
-source .env
+source ../python-implementation/.env
 
 function zip_files() {
     cd ${SRC}

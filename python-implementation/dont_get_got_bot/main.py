@@ -13,9 +13,6 @@ else:
 
 
 class DontGetGotBot:
-    def get_scores(self, ):
-        return "scores"
-
     def create_player(self, player_name, db=ddb):
         return db.add_player(player_name)
 
@@ -38,6 +35,8 @@ class DontGetGotBot:
 
 
 def lambda_handler(event, context):
+    thing_to_parse = event['body']
+    print(thing_to_parse)
     try:
         result = json.dumps(DontGetGotBot().get_all_scores())
         status_code = 200
