@@ -32,23 +32,37 @@ const handleRequest = async request => {
         .then(items => {
           return {
             statusCode: 200,
-            body: JSON.stringify(items)
+            body: `${prettifyScores(items)}`
           };
         })
         .catch(err => console.log(err));
     default:
       const res = {
         statusCode: 200,
-        body: JSON.stringify(`${request} is not a valid action for this bot!`)
+        body: `"${request}" is not a valid action for this bot!`
       };
       console.log(res);
       return res;
   }
 };
 
+const prettifyScores = scores => {
+  function compare(a, b) {
+    if (a.score > b.score) return -1;
+    if (a.score < b.score) return 1;
+    return 0;
+  }
+
+  return scores
+    .sort(compare)
+    .map(player => `*${player.player}*: ${player.score}\n`)
+    .join("");
+};
+
 exports.handler = async event => {
   const params = querystring.parse(event.body);
   if (process.env.VERIFICATION_TOKEN !== params.token) {
+    console.log(process.env.VERIFICATION_TOKEN, params.token);
     let res = {
       statusCode: 401,
       body: "Unauthorized"
@@ -56,6 +70,10 @@ exports.handler = async event => {
     console.log(res);
     return res;
   } else {
+    // return {
+    //   statusCode: 200,
+    //   body: JSON.stringify(event)
+    // };
     res = await handleRequest(params.text);
     console.log(res);
     return res;
