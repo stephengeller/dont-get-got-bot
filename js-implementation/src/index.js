@@ -38,8 +38,8 @@ const handleRequest = async request => {
         .catch(err => console.log(err));
     default:
       const res = {
-        statusCode: 400,
-        body: JSON.stringify(`${request} is not valid`)
+        statusCode: 200,
+        body: JSON.stringify(`${request} is not a valid action for this bot!`)
       };
       console.log(res);
       return res;
