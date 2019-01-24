@@ -19,7 +19,7 @@ function cleanup_zip() {
 
 function upload_to_aws() {
     echo "Uploading to AWS Lambda..."
-    aws lambda update-function-code --profile personal --publish --region ${REGION} --function-name ${FUNCTION_NAME} --zip-file fileb://${NAME_OF_ZIPPED_FILE}.zip
+    aws lambda update-function-code --profile personal --publish --region ${REGION} --function-name ${FUNCTION_NAME} --zip-file fileb://${NAME_OF_ZIPPED_FILE}.zip > /dev/null
     cleanup_zip
     echo "Done."
 }
