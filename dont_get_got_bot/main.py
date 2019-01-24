@@ -1,5 +1,6 @@
 from dont_get_got_bot import dynamodb_functions as ddb
 
+
 class DontGetGotBot:
     def get_scores(self, ):
         return "scores"
@@ -21,4 +22,4 @@ class DontGetGotBot:
 
 
 def lambda_handler(event, context):
-    bot = DontGetGotBot()
+    DontGetGotBot().list_players()

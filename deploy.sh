@@ -2,10 +2,12 @@
 
 set -e
 
+SRC=dont_get_got_bot
+
 source .env
 
 function zip_files() {
-    cd src
+    cd ${SRC}
     echo "Zipping up..."
     zip -r ../${NAME_OF_ZIPPED_FILE} . &>/dev/null
     cd - &>/dev/null

@@ -1,8 +1,8 @@
 import boto3
+import os
 
 TABLE_NAME = 'dont_get_got_scores'
 REGION = 'eu-west-2'
-boto3.setup_default_session(profile_name='personal')
 
 
 def add_player(player):
@@ -18,7 +18,11 @@ def create_table_session():
 
 
 def create_client():
-    session = boto3.session.Session(profile_name='personal',region_name=REGION)
+    session = boto3.session.Session(
+        region_name=REGION,
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY"],
+        aws_secret_access_key=os.environ["AWS_SECRET_KEY"],
+    )
     return session.client('dynamodb')
 
 
