@@ -5,7 +5,7 @@ set -e
 JS_FOLDER=$(dirname $0)
 SRC=${JS_FOLDER}/src
 
-source .env
+source ${JS_FOLDER}/../.env
 
 function get_clean_packages() {
     echo "Fetching node_modules"
