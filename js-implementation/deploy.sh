@@ -2,9 +2,9 @@
 
 set -e
 
-SRC=dont_get_got_bot
+SRC=$(dirname $0)/src
 
-source ../python-implementation/.env
+source .env
 
 function zip_files() {
     cd ${SRC}
@@ -19,7 +19,7 @@ function cleanup_zip() {
 
 function upload_to_aws() {
     echo "Uploading to AWS Lambda..."
-    aws lambda update-function-code --profile personal --publish --region ${REGION} --function-name ${FUNCTION_NAME} --zip-file fileb://${NAME_OF_ZIPPED_FILE}.zip > /dev/null
+    aws lambda update-function-code --profile personal --publish --region ${REGION} --function-name ${FUNCTION_NAME} --zip-file fileb://$(dirname $0)/${NAME_OF_ZIPPED_FILE}.zip > /dev/null
     cleanup_zip
     echo "Done."
 }
