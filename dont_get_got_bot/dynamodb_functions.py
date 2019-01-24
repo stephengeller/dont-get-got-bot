@@ -12,9 +12,9 @@ else:
 boto3.setup_default_session(region_name=REGION)
 
 
-def add_player(player):
+def add_player(player, score=0):
     table = create_table_session()
-    put_item_in_table(player=player, score=0, table=table)
+    put_item_in_table(player=player, score=score, table=table)
     print(player + " has been added to the table!")
 
 
@@ -32,7 +32,6 @@ def create_client():
 
 def create_session():
     if env == "prod":
-        print(os.environ)
         session = boto3.session.Session(
             region_name=REGION,
             aws_access_key_id=os.environ["ACCESS_KEY_ID"],
@@ -54,14 +53,12 @@ def get_score(player):
         }
     )
     score = response['Item']['points']['S']
-    print("Score for %s is now [%s]" % (player, score))
     return score
 
 
 def modify_score(player, points):
     table = create_table_session()
     score = get_score(player)
-    print("Modifying score %s by %s for player [%s]" % (score, points, player))
     new_score = int(int(score) + int(points))
     put_item_in_table(player, new_score, table)
 
@@ -70,7 +67,7 @@ def put_item_in_table(player, score, table):
     table.put_item(
         Item={
             "player": player,
-            "points": str(score)
+            "score": str(score)
         }
     )
 
@@ -78,5 +75,4 @@ def put_item_in_table(player, score, table):
 def list_players():
     table = create_table_session()
     items = table.scan()['Items']
-    for item in items: print(item)
     return items

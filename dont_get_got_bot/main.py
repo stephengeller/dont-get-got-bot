@@ -1,4 +1,15 @@
-import dynamodb_functions as ddb
+import json
+import os
+
+if "ENVIRONMENT" in os.environ:
+    env = os.environ["ENVIRONMENT"]
+else:
+    env = "dev"
+
+if env == "dev":
+    from dont_get_got_bot import dynamodb_functions as ddb
+else:
+    import dynamodb_functions as ddb
 
 
 class DontGetGotBot:
@@ -20,9 +31,20 @@ class DontGetGotBot:
     def list_players(self, db=ddb):
         return db.list_players()
 
+    def get_all_scores(self, db=ddb):
+        all_players = db.list_players()
+        sorted_by_score = list(reversed(sorted(all_players, key=lambda k: k['score'])))
+        return ", ".join(list(map(lambda x: "%s: %s" % (x['player'].capitalize(), x['score']), sorted_by_score)))
+
 
 def lambda_handler(event, context):
+    try:
+        result = json.dumps(DontGetGotBot().get_all_scores())
+        status_code = 200
+    except:
+        result = "Currently broken, try again later"
+        status_code = 400
     return {
-        "body": DontGetGotBot().list_players(),
-        "statusCode": 20
+        "body": result,
+        "statusCode": status_code
     }

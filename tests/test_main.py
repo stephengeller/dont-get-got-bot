@@ -40,3 +40,23 @@ def test_list_players():
     m.list_players.return_value = players
     assert bot().list_players(m) == players
     m.list_players.assert_called_once()
+
+
+def test_get_all_scores():
+    m = MagicMock()
+    players = [
+        {
+            "player": "foo",
+            "score": 5
+        },
+        {
+            "player": "bar",
+            "score": 7
+        },
+        {
+            "player": "baz",
+            "score": 2
+        }
+    ]
+    m.list_players.return_value = players
+    assert bot().get_all_scores(m) == "Bar: 7, Foo: 5, Baz: 2"
