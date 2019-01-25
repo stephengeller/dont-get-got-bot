@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ../python-implementation/.env
+source ../.env
 
 OUTPUT_FILE=output.txt
 
